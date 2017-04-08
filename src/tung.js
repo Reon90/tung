@@ -1,12 +1,12 @@
 'use strict';
 
-import Observer from './observer';
-import snabbdom from 'snabbdom/snabbdom';
+import Observer  from './observer';
+import snabbdom  from 'snabbdom/snabbdom';
 import snabbdomH from 'snabbdom/h';
 import snabbdomC from 'snabbdom/modules/class';
 import snabbdomP from 'snabbdom/modules/props';
 import snabbdomS from 'snabbdom/modules/style';
-import snabbdomE from 'snabbdom/modules/eventlisteners';
+import snabbdomE from './eventlisteners';
 import snabbdomA from 'snabbdom/modules/attributes';
 
 class Tung extends Observer {
@@ -22,31 +22,27 @@ class Tung extends Observer {
     }
 
     init() {}
-    
-    destroy(v, c) {
-        debugger
-        this.fire('removed', this);
-        c();
-    }
+
+    destroy() {}
 
     setProps(props) {
         this.props = props;
     }
-    
+
     setView(tpl, ...components) {
         this.tpl = tpl;
         this.components = components;
     }
-    
+
     setState(state) {
         Tung.ctx.push(this);
         this.state = state;
 
-        if (!this.inited) {
-            this.render(
+        if (!this._inited) {
+            this._render(
                 this.tpl.call(
                     state,
-                    this.process,
+                    this._process,
                     ...this.tpl.components.map((c) => this.components.find(component => component.id === c || component.name.toLowerCase() === c))
                 )
             );
@@ -54,11 +50,11 @@ class Tung extends Observer {
             this.fire('changed');
         }
     }
-    
-    render(stateRender) {
+
+    _render(stateRender) {
         this.stateRender = stateRender;
         
-        stateRender.data.hook = { remove: this.destroy.bind(this) };
+        stateRender.data.hook = { remove: this._remove.bind(this) };
         
         if (this.container) {
             if (this.container.stateRender) {
@@ -70,104 +66,140 @@ class Tung extends Observer {
             }
             this.container.stateRender = stateRender;
             this.els = {};
-            this.saveEls(stateRender);
+            this._saveEls(stateRender);
         } else {
-            this.inited = true;
+            this._inited = true;
         }
     }
 
-    process(sel, props, child) {
+    _process(sel, props, child) {
         let ctx = this;
         let block = props.attrs && props.attrs.block;
-        let instance = Tung.ctx[Tung.ctx.length-1];
+        let tung = Tung.ctx[Tung.ctx.length-1];
+        let isComponent = typeof sel === 'function';
+        let childProcessed;
+        let childIgnored;
+
         if (block) {
             ctx = this[block];
             if (Array.isArray(ctx)) {
-                child = ctx.map((context, index) => {
-                    if (typeof context !== 'object') {
-                        context = { item: context };
-                    }
-                    context.key = index;
-                    context.inheritedCtx = true;
-
-                    let vnode = Tung.proccessChild.call(instance, sel, child, context);
-                    if (Array.isArray(vnode)) {
-                        if (vnode.length > 1) {
-                            console.error('Children have to have parent node in array.');
-                        }
-                        vnode = vnode[0];
-                    }
-                    return vnode;
-                });
+                child = Tung.processArray(ctx, sel, child);
+                childProcessed = true;
             } else if (ctx) {
                 if (typeof ctx !== 'object') {
                     ctx = this;
                 }
-                Object.assign(props, Tung.getProps(ctx));
-                child = Tung.proccessChild.call(instance, sel, child, ctx);
+                ctx.inheritedCtx = true;
             } else {
-                return;
+                child = undefined;
+                childIgnored = true;
             }
-        } else {
+        }
+
+        if (!childIgnored) {
             if (ctx.inheritedCtx) {
                 Object.assign(props, Tung.getProps(ctx));
                 delete ctx.inheritedCtx;
             }
-            child = Tung.proccessChild.call(instance, sel, child, this);
-        }
-        
-        if (typeof sel === 'function') {
-            if (props.attrs && props.attrs.block) {
-                if (Array.isArray(child)) {
-                    child.forEach(c => Object.assign(c.data.attrs, props.attrs));
-                } else {
-                    Object.assign(child.data.attrs, props.attrs);
-                }
+
+            if (!childProcessed) {
+                child = Tung.processChild.call(tung, sel, child, ctx);
             }
-            return child;
+
+            if (isComponent) {
+                if (block) {
+                    Tung.executeArray(child, arr => {
+                        arr.forEach(child => Object.assign(child.data.attrs, props.attrs))
+                    });
+                }
+            } else {
+                child = snabbdomH(sel, props, child);
+            }
         }
 
-        return snabbdomH(sel, props, child);
+        return child;
     }
-    
-    static proccessChild(sel, child, ctx) {
-        if (typeof sel === 'function') {
+
+    _saveEls(node) {
+        let block = node.data && node.data.attrs && node.data.attrs.block;
+        if (block) {
+            if (this.els[block]) {
+                this.els[block] = Tung.executeArray(this.els[block], arr => {
+                    arr.push(node.elm);
+                    return arr;
+                });
+            } else {
+                this.els[block] = node.elm;
+            }
+        }
+
+        if (node.children) {
+            node.children.forEach(this._saveEls, this);
+        }
+    }
+
+    _remove(v, callback) {
+        this.fire('removed', this);
+        callback();
+    }
+
+    _childRemoved() {
+        this.setState(this.state);
+    }
+
+    _childRemoved(child) {
+        child.destroy();
+        let ref = this.refs[child.constructor.name];
+        if (Array.isArray(ref)) {
+            let index = ref.findIndex(ins => ins === child);
+            ref.splice(index, 1);
+        } else {
+            delete this.refs[child.constructor.name];
+        }
+    }
+
+    static processChild(sel, child, ctx) {
+        let isComponent = typeof sel === 'function';
+        let isStatefulComponent = sel.name;
+
+        if (isComponent) {
             ctx.inheritedCtx = true;
-            if (sel.name) {
-                let existentComponent = this.refs[sel.name];
-                if (existentComponent) {
-                    if (Array.isArray(existentComponent)) {
-                        existentComponent = existentComponent.find(c => c.relatedObj === ctx);
-                    } else {
-                        existentComponent = existentComponent.relatedObj === ctx ? existentComponent : null;
-                    }
+
+            if (isStatefulComponent) {
+                let initedComponent = this.refs[sel.name];
+                if (initedComponent) {
+                    Tung.executeArray(initedComponent, arr => {
+                        initedComponent = arr.find(c => c.relatedObj === ctx);
+                    });
                 }
-                if (existentComponent) {
-                    existentComponent.inited = false;
-                    Object.assign(existentComponent.state, ctx);
-                    existentComponent.setState(existentComponent.state);
-                    child = existentComponent.stateRender;
+
+                if (initedComponent) {
+                    initedComponent._inited = false;
+                    initedComponent.state.inheritedCtx = ctx.inheritedCtx;
+                    initedComponent.setState(initedComponent.state);
+                    child = initedComponent.stateRender;
                 } else {
                     let newComponent = new sel();
                     newComponent.setProps(ctx);
                     newComponent.init();
-                    newComponent.on('changed', this.childChanged, this)
-                        .on('removed', this.childRemoved, this);
+                    newComponent
+                        .on('changed', this._childRemoved, this)
+                        .on('removed', this._childRemoved, this);
                     newComponent.relatedObj = ctx;
                     child = newComponent.stateRender;
+
                     Tung.ctx.pop();
                     if (this.refs[sel.name]) {
-                        if (Array.isArray(this.refs[sel.name])) {
-                            this.refs[sel.name].push(newComponent);
-                        } else {
-                            this.refs[sel.name] = [this.refs[sel.name], newComponent];
-                        }
+                        this.refs[sel.name] = Tung.executeArray(this.refs[sel.name], arr => {
+                            arr.push(newComponent);
+                            return arr;
+                        });
                     } else {
                         this.refs[sel.name] = newComponent;
                     }
                 }
             } else {
-                child = sel.call(ctx, this.process, ...sel.components.map((c) => this.components.find(component => component.id === c)));
+                child = sel.call(ctx, this._process, ...sel.components.map((c) => this.components.find(component => component.id === c)));
             }
         }
         if (typeof child === 'function') {
@@ -179,48 +211,53 @@ class Tung extends Observer {
         }
         return child;
     }
-    
+
+    static executeArray(arr, fn) {
+        if (Array.isArray(arr)) {
+            return fn(arr);
+        } else {
+            return fn([arr]);
+        }
+    }
+
+    static processArray(ctx, sel, child) {
+        let tung = Tung.ctx[Tung.ctx.length-1];
+
+        return ctx.map((context, index) => {
+            if (typeof context !== 'object') {
+                context = { item: context };
+            }
+            context.key = index;
+            context.inheritedCtx = true;
+
+            let vnode = Tung.processChild.call(tung, sel, child, context);
+            if (Array.isArray(vnode)) {
+                if (vnode.length > 1) {
+                    console.error('Children have to have parent node in array.');
+                }
+                vnode = vnode[0];
+            }
+            return vnode;
+        });
+    }
+
     static getProps(ctx) {
+        let tung = Tung.ctx[Tung.ctx.length-1];
         let props = {};
         ['class', 'on', 'style', 'props', 'key'].forEach(it => {
-            if (ctx[it] !== undefined) {
-                props[it] = ctx[it];
+            let key = ctx[it];
+            if (key !== undefined) {
+                if (it === 'on') {
+                    for (let event in key) {
+                        if (typeof key[event] === 'function') {
+                            key[event] = [key[event], tung];
+                        }
+                    }
+                }
+                props[it] = key;
             }
         });
         return props;
-    }
-    
-    saveEls(node) {
-        let block = node.data && node.data.attrs && node.data.attrs.block;
-        if (block) {
-            if (this.els[block]) {
-                if (Array.isArray(this.els[block])) {
-                    this.els[block].push(node.elm);
-                } else {
-                    this.els[block] = [this.els[block], node.elm];
-                }
-            } else {
-                this.els[block] = node.elm;
-            }
-        }
-
-        if (node.children) {
-            node.children.forEach(this.saveEls, this);
-        }
-    }
-
-    childChanged() {
-        this.setState(this.state);
-    }
-
-    childRemoved(child) {
-        let ref = this.refs[child.constructor.name];
-        if (Array.isArray(ref)) {
-            let index = ref.findIndex(ins => ins === child);
-            ref.splice(index, 1);
-        } else {
-            delete this.refs[child.constructor.name];
-        }
     }
 }
 

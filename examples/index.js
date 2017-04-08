@@ -23,7 +23,7 @@ class Users extends Tung {
             users: [this.buildUser(this.usersIterator.next().value)],
             btn: {
                 text: 'Load more',
-                on: { click: this.handleEvent.bind(this) }
+                on: { click: this.handleEvent }
             }
         });
     }
@@ -35,7 +35,7 @@ class Users extends Tung {
             url: user.html_url,
             isAdmin: user.site_admin,
             id: user.id,
-            onDeleteProfile: this.onDeleteProfile.bind(this)
+            onDeleteProfile: [this.onDeleteProfile, this]
         };
     }
     
@@ -44,7 +44,6 @@ class Users extends Tung {
         if (user.done) {
             delete this.state.btn;
         }
-        this.state.users[0].name = Math.random();
         this.state.users.push(this.buildUser(user.value));
         this.setState(this.state);
     }

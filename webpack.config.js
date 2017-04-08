@@ -4,10 +4,10 @@ const path = require('path');
 const libraryName = 'tung';
 
 const config = {
-    entry: path.join(__dirname, `/examples/index.js`),
+    entry: path.join(__dirname, `/src/${libraryName}`),
     output: {
-        path: path.join(__dirname, '/examples'),
-        filename: `bundle.js`,
+        path: path.join(__dirname, '/dist'),
+        filename: `${libraryName}.js`,
         library: libraryName,
         libraryTarget: 'umd',
         umdNamedDefine: true
@@ -15,11 +15,11 @@ const config = {
     module: {
         loaders: [{
             test: /(\.js)$/,
-            //loader: 'babel-loader',
+            loader: 'babel-loader',
             exclude: /(node_modules|bower_components)/
         }]
     },
-    //plugins: [ new UglifyJsPlugin({ minimize: true }) ]
+    plugins: [ new UglifyJsPlugin({ minimize: true }) ]
 };
 
 module.exports = config;

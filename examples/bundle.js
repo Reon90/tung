@@ -73,288 +73,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-(function (root, factory) {
-  if (true) module.exports = factory();else if (typeof define === 'function' && define.amd) define(["module"], factory);else if (typeof exports === 'object') exports["module"] = factory();else root["module"] = factory();
-})(this, function (module = {}) {
-  module.exports = function (h) {
-    return h.call(
-      this,
-      "span",
-      {
-        attrs: { "class": "btn" }
-      },
-      function x() {
-        return [this.text];
-      }
-    );
-  };
-
-  module.exports.id = 'btn';
-  module.exports.components = [];
-  return module.exports;
-});
-
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__observer__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_snabbdom_snabbdom__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_snabbdom_snabbdom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_snabbdom_snabbdom__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_snabbdom_h__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_snabbdom_h___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_snabbdom_h__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_snabbdom_modules_class__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_snabbdom_modules_class___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_snabbdom_modules_class__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_snabbdom_modules_props__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_snabbdom_modules_props___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_snabbdom_modules_props__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_snabbdom_modules_style__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_snabbdom_modules_style___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_snabbdom_modules_style__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_snabbdom_modules_eventlisteners__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_snabbdom_modules_eventlisteners___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_snabbdom_modules_eventlisteners__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_snabbdom_modules_attributes__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_snabbdom_modules_attributes___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_snabbdom_modules_attributes__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Tung; });
-
-
-
-
-
-
-
-
-
-
-
-class Tung extends __WEBPACK_IMPORTED_MODULE_0__observer__["a" /* default */] {
-    constructor(container) {
-        super();
-        
-        if (container && container instanceof window.HTMLElement) {
-            this.container = container;
-            this.patch = __WEBPACK_IMPORTED_MODULE_1_snabbdom_snabbdom___default.a.init([__WEBPACK_IMPORTED_MODULE_7_snabbdom_modules_attributes___default.a, __WEBPACK_IMPORTED_MODULE_3_snabbdom_modules_class___default.a, __WEBPACK_IMPORTED_MODULE_4_snabbdom_modules_props___default.a, __WEBPACK_IMPORTED_MODULE_5_snabbdom_modules_style___default.a, __WEBPACK_IMPORTED_MODULE_6_snabbdom_modules_eventlisteners___default.a]);
-        }
-
-        this.refs = {};
-    }
-
-    init() {}
-    
-    destroy(v, c) {
-        debugger
-        this.fire('removed', this);
-        c();
-    }
-
-    setProps(props) {
-        this.props = props;
-    }
-    
-    setView(tpl, ...components) {
-        this.tpl = tpl;
-        this.components = components;
-    }
-    
-    setState(state) {
-        Tung.ctx.push(this);
-        this.state = state;
-
-        if (!this.inited) {
-            this.render(
-                this.tpl.call(
-                    state,
-                    this.process,
-                    ...this.tpl.components.map((c) => this.components.find(component => component.id === c || component.name.toLowerCase() === c))
-                )
-            );
-        } else {
-            this.fire('changed');
-        }
-    }
-    
-    render(stateRender) {
-        this.stateRender = stateRender;
-        
-        stateRender.data.hook = { remove: this.destroy.bind(this) };
-        
-        if (this.container) {
-            if (this.container.stateRender) {
-                this.patch(this.container.stateRender, stateRender);
-            } else {
-                let div = document.createElement('div');
-                this.container.appendChild(div);
-                this.patch(div, stateRender);
-            }
-            this.container.stateRender = stateRender;
-            this.els = {};
-            this.saveEls(stateRender);
-        } else {
-            this.inited = true;
-        }
-    }
-
-    process(sel, props, child) {
-        let ctx = this;
-        let block = props.attrs && props.attrs.block;
-        let instance = Tung.ctx[Tung.ctx.length-1];
-        if (block) {
-            ctx = this[block];
-            if (Array.isArray(ctx)) {
-                child = ctx.map((context, index) => {
-                    if (typeof context !== 'object') {
-                        context = { item: context };
-                    }
-                    context.key = index;
-                    context.inheritedCtx = true;
-
-                    let vnode = Tung.proccessChild.call(instance, sel, child, context);
-                    if (Array.isArray(vnode)) {
-                        if (vnode.length > 1) {
-                            console.error('Children have to have parent node in array.');
-                        }
-                        vnode = vnode[0];
-                    }
-                    return vnode;
-                });
-            } else if (ctx) {
-                if (typeof ctx !== 'object') {
-                    ctx = this;
-                }
-                Object.assign(props, Tung.getProps(ctx));
-                child = Tung.proccessChild.call(instance, sel, child, ctx);
-            } else {
-                return;
-            }
-        } else {
-            if (ctx.inheritedCtx) {
-                Object.assign(props, Tung.getProps(ctx));
-                delete ctx.inheritedCtx;
-            }
-            child = Tung.proccessChild.call(instance, sel, child, this);
-        }
-        
-        if (typeof sel === 'function') {
-            if (props.attrs && props.attrs.block) {
-                if (Array.isArray(child)) {
-                    child.forEach(c => Object.assign(c.data.attrs, props.attrs));
-                } else {
-                    Object.assign(child.data.attrs, props.attrs);
-                }
-            }
-            return child;
-        }
-
-        return __WEBPACK_IMPORTED_MODULE_2_snabbdom_h___default()(sel, props, child);
-    }
-    
-    static proccessChild(sel, child, ctx) {
-        if (typeof sel === 'function') {
-            ctx.inheritedCtx = true;
-            if (sel.name) {
-                let existentComponent = this.refs[sel.name];
-                if (existentComponent) {
-                    if (Array.isArray(existentComponent)) {
-                        existentComponent = existentComponent.find(c => c.relatedObj === ctx);
-                    } else {
-                        existentComponent = existentComponent.relatedObj === ctx ? existentComponent : null;
-                    }
-                }
-                if (existentComponent) {
-                    existentComponent.inited = false;
-                    Object.assign(existentComponent.state, ctx);
-                    existentComponent.setState(existentComponent.state);
-                    child = existentComponent.stateRender;
-                } else {
-                    let newComponent = new sel();
-                    newComponent.setProps(ctx);
-                    newComponent.init();
-                    newComponent.on('changed', this.childChanged, this)
-                        .on('removed', this.childRemoved, this);
-                    newComponent.relatedObj = ctx;
-                    child = newComponent.stateRender;
-                    Tung.ctx.pop();
-                    if (this.refs[sel.name]) {
-                        if (Array.isArray(this.refs[sel.name])) {
-                            this.refs[sel.name].push(newComponent);
-                        } else {
-                            this.refs[sel.name] = [this.refs[sel.name], newComponent];
-                        }
-                    } else {
-                        this.refs[sel.name] = newComponent;
-                    }
-                }
-            } else {
-                child = sel.call(ctx, this.process, ...sel.components.map((c) => this.components.find(component => component.id === c)));
-            }
-        }
-        if (typeof child === 'function') {
-            child = child.call(ctx);
-            if (Array.isArray(child[0])) {
-                child = child[0];
-            }
-            child = child.filter(node => node !== undefined);
-        }
-        return child;
-    }
-    
-    static getProps(ctx) {
-        let props = {};
-        ['class', 'on', 'style', 'props', 'key'].forEach(it => {
-            if (ctx[it] !== undefined) {
-                props[it] = ctx[it];
-            }
-        });
-        return props;
-    }
-    
-    saveEls(node) {
-        let block = node.data && node.data.attrs && node.data.attrs.block;
-        if (block) {
-            if (this.els[block]) {
-                if (Array.isArray(this.els[block])) {
-                    this.els[block].push(node.elm);
-                } else {
-                    this.els[block] = [this.els[block], node.elm];
-                }
-            } else {
-                this.els[block] = node.elm;
-            }
-        }
-
-        if (node.children) {
-            node.children.forEach(this.saveEls, this);
-        }
-    }
-
-    childChanged() {
-        this.setState(this.state);
-    }
-
-    childRemoved(child) {
-        let ref = this.refs[child.constructor.name];
-        if (Array.isArray(ref)) {
-            let index = ref.findIndex(ins => ins === child);
-            ref.splice(index, 1);
-        } else {
-            delete this.refs[child.constructor.name];
-        }
-    }
-}
-
-Tung.ctx = [];
-
-
-
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -419,6 +142,320 @@ exports.default = h;
 //# sourceMappingURL=h.js.map
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function (root, factory) {
+  if (true) module.exports = factory();else if (typeof define === 'function' && define.amd) define(["module"], factory);else if (typeof exports === 'object') exports["module"] = factory();else root["module"] = factory();
+})(this, function (module = {}) {
+  module.exports = function (h) {
+    return h.call(
+      this,
+      "span",
+      {
+        attrs: { "class": "btn" }
+      },
+      function x() {
+        return [this.text];
+      }
+    );
+  };
+
+  module.exports.id = 'btn';
+  module.exports.components = [];
+  return module.exports;
+});
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__observer__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_snabbdom_snabbdom__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_snabbdom_snabbdom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_snabbdom_snabbdom__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_snabbdom_h__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_snabbdom_h___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_snabbdom_h__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_snabbdom_modules_class__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_snabbdom_modules_class___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_snabbdom_modules_class__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_snabbdom_modules_props__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_snabbdom_modules_props___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_snabbdom_modules_props__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_snabbdom_modules_style__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_snabbdom_modules_style___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_snabbdom_modules_style__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__eventlisteners__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__eventlisteners___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__eventlisteners__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_snabbdom_modules_attributes__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_snabbdom_modules_attributes___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_snabbdom_modules_attributes__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Tung; });
+
+
+
+
+
+
+
+
+
+
+
+class Tung extends __WEBPACK_IMPORTED_MODULE_0__observer__["a" /* default */] {
+    constructor(container) {
+        super();
+        
+        if (container && container instanceof window.HTMLElement) {
+            this.container = container;
+            this.patch = __WEBPACK_IMPORTED_MODULE_1_snabbdom_snabbdom___default.a.init([__WEBPACK_IMPORTED_MODULE_7_snabbdom_modules_attributes___default.a, __WEBPACK_IMPORTED_MODULE_3_snabbdom_modules_class___default.a, __WEBPACK_IMPORTED_MODULE_4_snabbdom_modules_props___default.a, __WEBPACK_IMPORTED_MODULE_5_snabbdom_modules_style___default.a, __WEBPACK_IMPORTED_MODULE_6__eventlisteners___default.a]);
+        }
+
+        this.refs = {};
+    }
+
+    init() {}
+
+    destroy() {}
+
+    setProps(props) {
+        this.props = props;
+    }
+
+    setView(tpl, ...components) {
+        this.tpl = tpl;
+        this.components = components;
+    }
+
+    setState(state) {
+        Tung.ctx.push(this);
+        this.state = state;
+
+        if (!this._inited) {
+            this._render(
+                this.tpl.call(
+                    state,
+                    this._process,
+                    ...this.tpl.components.map((c) => this.components.find(component => component.id === c || component.name.toLowerCase() === c))
+                )
+            );
+        } else {
+            this.fire('changed');
+        }
+    }
+
+    _render(stateRender) {
+        this.stateRender = stateRender;
+        
+        stateRender.data.hook = { remove: this._remove.bind(this) };
+        
+        if (this.container) {
+            if (this.container.stateRender) {
+                this.patch(this.container.stateRender, stateRender);
+            } else {
+                let div = document.createElement('div');
+                this.container.appendChild(div);
+                this.patch(div, stateRender);
+            }
+            this.container.stateRender = stateRender;
+            this.els = {};
+            this._saveEls(stateRender);
+        } else {
+            this._inited = true;
+        }
+    }
+
+    _process(sel, props, child) {
+        let ctx = this;
+        let block = props.attrs && props.attrs.block;
+        let tung = Tung.ctx[Tung.ctx.length-1];
+        let isComponent = typeof sel === 'function';
+        let childProcessed;
+        let childIgnored;
+
+        if (block) {
+            ctx = this[block];
+            if (Array.isArray(ctx)) {
+                child = Tung.processArray(ctx, sel, child);
+                childProcessed = true;
+            } else if (ctx) {
+                if (typeof ctx !== 'object') {
+                    ctx = this;
+                }
+                ctx.inheritedCtx = true;
+            } else {
+                child = undefined;
+                childIgnored = true;
+            }
+        }
+
+        if (!childIgnored) {
+            if (ctx.inheritedCtx) {
+                Object.assign(props, Tung.getProps(ctx));
+                delete ctx.inheritedCtx;
+            }
+
+            if (!childProcessed) {
+                child = Tung.processChild.call(tung, sel, child, ctx);
+            }
+
+            if (isComponent) {
+                if (block) {
+                    Tung.executeArray(child, arr => {
+                        arr.forEach(child => Object.assign(child.data.attrs, props.attrs))
+                    });
+                }
+            } else {
+                child = __WEBPACK_IMPORTED_MODULE_2_snabbdom_h___default()(sel, props, child);
+            }
+        }
+
+        return child;
+    }
+
+    _saveEls(node) {
+        let block = node.data && node.data.attrs && node.data.attrs.block;
+        if (block) {
+            if (this.els[block]) {
+                this.els[block] = Tung.executeArray(this.els[block], arr => {
+                    arr.push(node.elm);
+                    return arr;
+                });
+            } else {
+                this.els[block] = node.elm;
+            }
+        }
+
+        if (node.children) {
+            node.children.forEach(this._saveEls, this);
+        }
+    }
+
+    _remove(v, callback) {
+        this.fire('removed', this);
+        callback();
+    }
+
+    _childRemoved() {
+        this.setState(this.state);
+    }
+
+    _childRemoved(child) {
+        child.destroy();
+        let ref = this.refs[child.constructor.name];
+        if (Array.isArray(ref)) {
+            let index = ref.findIndex(ins => ins === child);
+            ref.splice(index, 1);
+        } else {
+            delete this.refs[child.constructor.name];
+        }
+    }
+
+    static processChild(sel, child, ctx) {
+        let isComponent = typeof sel === 'function';
+        let isStatefulComponent = sel.name;
+
+        if (isComponent) {
+            ctx.inheritedCtx = true;
+
+            if (isStatefulComponent) {
+                let initedComponent = this.refs[sel.name];
+                if (initedComponent) {
+                    Tung.executeArray(initedComponent, arr => {
+                        initedComponent = arr.find(c => c.relatedObj === ctx);
+                    });
+                }
+
+                if (initedComponent) {
+                    initedComponent._inited = false;
+                    initedComponent.state.inheritedCtx = ctx.inheritedCtx;
+                    initedComponent.setState(initedComponent.state);
+                    child = initedComponent.stateRender;
+                } else {
+                    let newComponent = new sel();
+                    newComponent.setProps(ctx);
+                    newComponent.init();
+                    newComponent
+                        .on('changed', this._childRemoved, this)
+                        .on('removed', this._childRemoved, this);
+                    newComponent.relatedObj = ctx;
+                    child = newComponent.stateRender;
+
+                    Tung.ctx.pop();
+                    if (this.refs[sel.name]) {
+                        this.refs[sel.name] = Tung.executeArray(this.refs[sel.name], arr => {
+                            arr.push(newComponent);
+                            return arr;
+                        });
+                    } else {
+                        this.refs[sel.name] = newComponent;
+                    }
+                }
+            } else {
+                child = sel.call(ctx, this._process, ...sel.components.map((c) => this.components.find(component => component.id === c)));
+            }
+        }
+        if (typeof child === 'function') {
+            child = child.call(ctx);
+            if (Array.isArray(child[0])) {
+                child = child[0];
+            }
+            child = child.filter(node => node !== undefined);
+        }
+        return child;
+    }
+
+    static executeArray(arr, fn) {
+        if (Array.isArray(arr)) {
+            return fn(arr);
+        } else {
+            return fn([arr]);
+        }
+    }
+
+    static processArray(ctx, sel, child) {
+        let tung = Tung.ctx[Tung.ctx.length-1];
+
+        return ctx.map((context, index) => {
+            if (typeof context !== 'object') {
+                context = { item: context };
+            }
+            context.key = index;
+            context.inheritedCtx = true;
+
+            let vnode = Tung.processChild.call(tung, sel, child, context);
+            if (Array.isArray(vnode)) {
+                if (vnode.length > 1) {
+                    console.error('Children have to have parent node in array.');
+                }
+                vnode = vnode[0];
+            }
+            return vnode;
+        });
+    }
+
+    static getProps(ctx) {
+        let tung = Tung.ctx[Tung.ctx.length-1];
+        let props = {};
+        ['class', 'on', 'style', 'props', 'key'].forEach(it => {
+            let key = ctx[it];
+            if (key !== undefined) {
+                if (it === 'on') {
+                    for (let event in key) {
+                        if (typeof key[event] === 'function') {
+                            key[event] = [key[event], tung];
+                        }
+                    }
+                }
+                props[it] = key;
+            }
+        });
+        return props;
+    }
+}
+
+Tung.ctx = [];
+
+
+
+
+/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -452,13 +489,11 @@ exports.default = vnode;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_tung__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tpl_components_card__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_tung__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tpl_components_card__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tpl_components_card___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__tpl_components_card__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tpl_components_btn__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tpl_components_btn__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tpl_components_btn___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__tpl_components_btn__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__btn__ = __webpack_require__(7);
-
 
 
 
@@ -467,7 +502,7 @@ class Card extends __WEBPACK_IMPORTED_MODULE_0__src_tung__["a" /* Tung */] {
     constructor(container) {
         super(container);
 
-        this.setView(__WEBPACK_IMPORTED_MODULE_1__tpl_components_card___default.a, __WEBPACK_IMPORTED_MODULE_3__btn__["a" /* default */], __WEBPACK_IMPORTED_MODULE_2__tpl_components_btn___default.a);
+        this.setView(__WEBPACK_IMPORTED_MODULE_1__tpl_components_card___default.a, __WEBPACK_IMPORTED_MODULE_2__tpl_components_btn___default.a);
     }
 
     init() {
@@ -538,37 +573,12 @@ class Card extends __WEBPACK_IMPORTED_MODULE_0__src_tung__["a" /* Tung */] {
 
 /***/ }),
 /* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_tung__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tpl_components_btn__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tpl_components_btn___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__tpl_components_btn__);
-
-
-
-class Button extends __WEBPACK_IMPORTED_MODULE_0__src_tung__["a" /* Tung */] {
-    constructor(container) {
-        super(container);
-
-        this.setView(__WEBPACK_IMPORTED_MODULE_1__tpl_components_btn___default.a);
-    }
-
-    init() {
-        this.setState({text: 'xxx'});
-    }
-}
-
-/* harmony default export */ __webpack_exports__["a"] = Button;
-
-/***/ }),
-/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (root, factory) {
     if (true) module.exports = factory();else if (typeof define === 'function' && define.amd) define(["module"], factory);else if (typeof exports === 'object') exports["module"] = factory();else root["module"] = factory();
 })(this, function (module = {}) {
-    module.exports = function (h, Button, Btn) {
+    module.exports = function (h, Btn) {
         return h.call(
             this,
             "div",
@@ -602,7 +612,7 @@ class Button extends __WEBPACK_IMPORTED_MODULE_0__src_tung__["a" /* Tung */] {
                     }
                 ), h.call(
                     this,
-                    Button,
+                    Btn,
                     {
                         attrs: { block: "btn" }
                     }
@@ -618,12 +628,12 @@ class Button extends __WEBPACK_IMPORTED_MODULE_0__src_tung__["a" /* Tung */] {
     };
 
     module.exports.id = 'card';
-    module.exports.components = ["button", "btn"];
+    module.exports.components = ["btn"];
     return module.exports;
 });
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -695,7 +705,7 @@ exports.default = exports.htmlDomApi;
 //# sourceMappingURL=htmldomapi.js.map
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -760,7 +770,7 @@ exports.default = exports.attributesModule;
 //# sourceMappingURL=attributes.js.map
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -791,108 +801,7 @@ exports.default = exports.classModule;
 //# sourceMappingURL=class.js.map
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-function invokeHandler(handler, vnode, event) {
-    if (typeof handler === "function") {
-        // call function handler
-        handler.call(vnode, event, vnode);
-    }
-    else if (typeof handler === "object") {
-        // call handler with arguments
-        if (typeof handler[0] === "function") {
-            // special case for single argument for performance
-            if (handler.length === 2) {
-                handler[0].call(vnode, handler[1], event, vnode);
-            }
-            else {
-                var args = handler.slice(1);
-                args.push(event);
-                args.push(vnode);
-                handler[0].apply(vnode, args);
-            }
-        }
-        else {
-            // call multiple handlers
-            for (var i = 0; i < handler.length; i++) {
-                invokeHandler(handler[i]);
-            }
-        }
-    }
-}
-function handleEvent(event, vnode) {
-    var name = event.type, on = vnode.data.on;
-    // call event handler(s) if exists
-    if (on && on[name]) {
-        invokeHandler(on[name], vnode, event);
-    }
-}
-function createListener() {
-    return function handler(event) {
-        handleEvent(event, handler.vnode);
-    };
-}
-function updateEventListeners(oldVnode, vnode) {
-    var oldOn = oldVnode.data.on, oldListener = oldVnode.listener, oldElm = oldVnode.elm, on = vnode && vnode.data.on, elm = (vnode && vnode.elm), name;
-    // optimization for reused immutable handlers
-    if (oldOn === on) {
-        return;
-    }
-    // remove existing listeners which no longer used
-    if (oldOn && oldListener) {
-        // if element changed or deleted we remove all existing listeners unconditionally
-        if (!on) {
-            for (name in oldOn) {
-                // remove listener if element was changed or existing listeners removed
-                oldElm.removeEventListener(name, oldListener, false);
-            }
-        }
-        else {
-            for (name in oldOn) {
-                // remove listener if existing listener removed
-                if (!on[name]) {
-                    oldElm.removeEventListener(name, oldListener, false);
-                }
-            }
-        }
-    }
-    // add new listeners which has not already attached
-    if (on) {
-        // reuse existing listener or create new
-        var listener = vnode.listener = oldVnode.listener || createListener();
-        // update vnode for listener
-        listener.vnode = vnode;
-        // if element changed or added we add all needed listeners unconditionally
-        if (!oldOn) {
-            for (name in on) {
-                // add listener if element was changed or new listeners added
-                elm.addEventListener(name, listener, false);
-            }
-        }
-        else {
-            for (name in on) {
-                // add listener if new listener added
-                if (!oldOn[name]) {
-                    elm.addEventListener(name, listener, false);
-                }
-            }
-        }
-    }
-}
-exports.eventListenersModule = {
-    create: updateEventListeners,
-    update: updateEventListeners,
-    destroy: updateEventListeners
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = exports.eventListenersModule;
-//# sourceMappingURL=eventlisteners.js.map
-
-/***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -924,7 +833,7 @@ exports.default = exports.propsModule;
 //# sourceMappingURL=props.js.map
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1016,14 +925,14 @@ exports.default = exports.styleModule;
 //# sourceMappingURL=style.js.map
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var vnode_1 = __webpack_require__(4);
 var is = __webpack_require__(3);
-var htmldomapi_1 = __webpack_require__(9);
+var htmldomapi_1 = __webpack_require__(8);
 function isUndef(s) { return s === undefined; }
 function isDef(s) { return s !== undefined; }
 var emptyNode = vnode_1.default('', {}, [], undefined, undefined);
@@ -1046,9 +955,9 @@ function createKeyToOldIdx(children, beginIdx, endIdx) {
     return map;
 }
 var hooks = ['create', 'update', 'remove', 'destroy', 'pre', 'post'];
-var h_1 = __webpack_require__(2);
+var h_1 = __webpack_require__(0);
 exports.h = h_1.h;
-var thunk_1 = __webpack_require__(16);
+var thunk_1 = __webpack_require__(14);
 exports.thunk = thunk_1.thunk;
 function init(modules, domApi) {
     var i, j, cbs = {};
@@ -1328,12 +1237,12 @@ exports.init = init;
 //# sourceMappingURL=snabbdom.js.map
 
 /***/ }),
-/* 16 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var h_1 = __webpack_require__(2);
+var h_1 = __webpack_require__(0);
 function copyToThunk(vnode, thunk) {
     thunk.elm = vnode.elm;
     vnode.data.fn = thunk.data.fn;
@@ -1380,7 +1289,117 @@ exports.default = exports.thunk;
 //# sourceMappingURL=thunk.js.map
 
 /***/ }),
-/* 17 */
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var require;var require;(function(f){if(true){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.snabbdom_eventlisteners = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return require(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
+function invokeHandler(handler, vnode, event) {
+    if (typeof handler === "function") {
+        // call function handler
+        handler.call(vnode, event, vnode);
+    }
+    else if (Array.isArray(handler)) {
+        // call handler with arguments
+        if (typeof handler[0] === "function") {
+            // special case for single argument for performance
+            if (handler.length === 2) {
+                handler[0].call(handler[1], event, vnode);
+            }
+            else {
+                var args = handler.slice(1);
+                args.push(event);
+                args.push(vnode);
+                handler[0].apply(vnode, args);
+            }
+        }
+        else {
+            // call multiple handlers
+            for (var i = 0; i < handler.length; i++) {
+                invokeHandler(handler[i]);
+            }
+        }
+    }
+    else if (typeof handler === "object") {
+        handler.handleEvent.call(handler, event);
+    }
+}
+function handleEvent(event, vnode) {
+    var name = event.type, on = vnode.data.on;
+    // call event handler(s) if exists
+    if (on && on[name]) {
+        invokeHandler(on[name], vnode, event);
+    }
+}
+function createListener() {
+    return function handler(event) {
+        handleEvent(event, handler.vnode);
+    };
+}
+function updateEventListeners(oldVnode, vnode) {
+    var oldOn = oldVnode.data.on, oldListener = oldVnode.listener, oldElm = oldVnode.elm, on = vnode && vnode.data.on, elm = (vnode && vnode.elm), name;
+    // optimization for reused immutable handlers
+    if (oldOn === on) {
+        if (vnode) {
+           vnode.listener = oldVnode.listener;
+        }
+        return;
+    }
+    // remove existing listeners which no longer used
+    if (oldOn && oldListener) {
+        // if element changed or deleted we remove all existing listeners unconditionally
+        if (!on) {
+            for (name in oldOn) {
+                // remove listener if element was changed or existing listeners removed
+                oldElm.removeEventListener(name, oldListener, false);
+            }
+        }
+        else {
+            for (name in oldOn) {
+                // remove listener if existing listener removed
+                if (!on[name]) {
+                    oldElm.removeEventListener(name, oldListener, false);
+                }
+            }
+        }
+    }
+    // add new listeners which has not already attached
+    if (on) {
+        // reuse existing listener or create new
+        var listener = vnode.listener = oldVnode.listener || createListener();
+        // update vnode for listener
+        listener.vnode = vnode;
+        // if element changed or added we add all needed listeners unconditionally
+        if (!oldOn) {
+            for (name in on) {
+                // add listener if element was changed or new listeners added
+                elm.addEventListener(name, listener, false);
+            }
+        }
+        else {
+            for (name in on) {
+                // add listener if new listener added
+                if (!oldOn[name]) {
+                    elm.addEventListener(name, listener, false);
+                }
+            }
+        }
+    }
+}
+exports.eventListenersModule = {
+    create: updateEventListeners,
+    update: updateEventListeners,
+    destroy: updateEventListeners
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = exports.eventListenersModule;
+
+},{}]},{},[1])(1)
+});
+
+
+/***/ }),
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1435,16 +1454,16 @@ class Observer {
 /* harmony default export */ __webpack_exports__["a"] = Observer;
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_tung__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_tung__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__card__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tpl_page__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tpl_page___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__tpl_page__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tpl_components_btn__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tpl_components_btn__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tpl_components_btn___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__tpl_components_btn__);
 
 
@@ -1471,7 +1490,7 @@ class Users extends __WEBPACK_IMPORTED_MODULE_0__src_tung__["a" /* Tung */] {
             users: [this.buildUser(this.usersIterator.next().value)],
             btn: {
                 text: 'Load more',
-                on: { click: this.handleEvent.bind(this) }
+                on: { click: this.handleEvent }
             }
         });
     }
@@ -1483,7 +1502,7 @@ class Users extends __WEBPACK_IMPORTED_MODULE_0__src_tung__["a" /* Tung */] {
             url: user.html_url,
             isAdmin: user.site_admin,
             id: user.id,
-            onDeleteProfile: this.onDeleteProfile.bind(this)
+            onDeleteProfile: [this.onDeleteProfile, this]
         };
     }
     
@@ -1492,7 +1511,6 @@ class Users extends __WEBPACK_IMPORTED_MODULE_0__src_tung__["a" /* Tung */] {
         if (user.done) {
             delete this.state.btn;
         }
-        this.state.users[0].name = Math.random();
         this.state.users.push(this.buildUser(user.value));
         this.setState(this.state);
     }

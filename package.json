@@ -1,7 +1,7 @@
 {
   "name": "tung",
   "version": "0.1.0",
-  "description": "Base class which provide principles of render html.",
+  "description": "A javascript library for rendering html.",
   "main": "src/tung",
   "scripts": {
     "build": "webpack",
@@ -32,7 +32,9 @@
     "vdom",
     "view",
     "component",
-    "framework"
+    "framework",
+    "react",
+    "snabbdom"
   ],
   "author": "Artem Kunets",
   "license": "MIT",

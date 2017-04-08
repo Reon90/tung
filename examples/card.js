@@ -1,13 +1,12 @@
 import {Tung} from '../src/tung';
 import card from './tpl/components/card';
 import btn from './tpl/components/btn';
-import Button from './btn';
 
 class Card extends Tung {
     constructor(container) {
         super(container);
 
-        this.setView(card, Button, btn);
+        this.setView(card, btn);
     }
 
     init() {
