@@ -2,6 +2,11 @@
 
 A javascript library for rendering html. Tung helps to divide html and javascript development. In order to start working with tung, you only need to know two methods, setView and setState.
 
+## Install
+```
+npm install tung
+```
+
 ## Features
 
 &bull; based on [snabbdom](https://github.com/snabbdom/snabbdom), a fast and simple virtual DOM library;
@@ -23,8 +28,8 @@ A javascript library for rendering html. Tung helps to divide html and javascrip
 
 [Demo](https://reon90.github.io/tung/examples/index.html)
 
-```
-// page.tpl
+```html
+<!-- page.tpl -->
 <div>
     <div class="users">
         <Card block="users" />
@@ -32,19 +37,19 @@ A javascript library for rendering html. Tung helps to divide html and javascrip
     <Btn block="btn" />
 </div>
 
-// btn.tpl
+<!-- btn.tpl -->
 <span class="btn">{this.text}</span>
 
-// card.tpl
+<!-- card.tpl -->
 <div class="item item--admin">
     <img src={this.img} width="50" height="50" />
     <span class="item__content">{this.name}<span block="isAdmin"> &bull; admin</span></span>
     <Btn block="btn"/>
     <Btn block="delete"/>
 </div>
+```
 
-/* ======================== */
-
+```js
 import {Tung} from 'tung';
 import card from './card';
 import page from './tpl/page';
