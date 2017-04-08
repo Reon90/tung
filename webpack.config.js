@@ -1,5 +1,4 @@
 const webpack = require('webpack');
-const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 const path = require('path');
 const libraryName = 'tung';
 
@@ -18,8 +17,7 @@ const config = {
             loader: 'babel-loader',
             exclude: /(node_modules|bower_components)/
         }]
-    },
-    plugins: [ new UglifyJsPlugin({ minimize: true }) ]
+    }
 };
 
 module.exports = config;

@@ -1,8 +1,8 @@
 {
   "name": "tung",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A javascript library for rendering html.",
-  "main": "src/tung",
+  "main": "dist/tung",
   "scripts": {
     "build": "webpack",
     "test": "NODE_PATH=. mocha test"
