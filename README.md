@@ -7,6 +7,12 @@ A javascript library for rendering html. Tung helps to divide html and javascrip
 npm install tung
 ```
 
+**Of course, that you need to convert html to js.**
+```
+npm install babel-tung
+```
+There is config for [Webpack](https://webpack.github.io/) and [Gulp](http://gulpjs.com/)
+
 ## Features
 
 &bull; based on [snabbdom](https://github.com/snabbdom/snabbdom), a fast and simple virtual DOM library;
