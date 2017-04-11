@@ -332,7 +332,7 @@ class Tung extends __WEBPACK_IMPORTED_MODULE_0__observer__["a" /* default */] {
         callback();
     }
 
-    _childRemoved() {
+    _childChanged() {
         this.setState(this.state);
     }
 
@@ -372,7 +372,7 @@ class Tung extends __WEBPACK_IMPORTED_MODULE_0__observer__["a" /* default */] {
                     newComponent.setProps(ctx);
                     newComponent.init();
                     newComponent
-                        .on('changed', this._childRemoved, this)
+                        .on('changed', this._childChanged, this)
                         .on('removed', this._childRemoved, this);
                     newComponent.relatedObj = ctx;
                     child = newComponent.stateRender;

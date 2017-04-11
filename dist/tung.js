@@ -175,146 +175,117 @@ exports.default = vnode;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var require;var require;
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-(function (f) {
-    if (( false ? "undefined" : _typeof(exports)) === "object" && typeof module !== "undefined") {
-        module.exports = f();
-    } else if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (f),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else {
-        var g;if (typeof window !== "undefined") {
-            g = window;
-        } else if (typeof global !== "undefined") {
-            g = global;
-        } else if (typeof self !== "undefined") {
-            g = self;
+function invokeHandler(handler, vnode, event) {
+    if (typeof handler === 'function') {
+        // call function handler
+        handler.call(vnode, event, vnode);
+    } else if (Array.isArray(handler)) {
+        // call handler with arguments
+        if (typeof handler[0] === 'function') {
+            // special case for single argument for performance
+            if (handler.length === 2) {
+                handler[0].call(handler[1], event, vnode);
+            } else {
+                var args = handler.slice(1);
+                args.push(event);
+                args.push(vnode);
+                handler[0].apply(vnode, args);
+            }
         } else {
-            g = this;
-        }g.snabbdom_eventlisteners = f();
+            // call multiple handlers
+            for (var i = 0; i < handler.length; i++) {
+                invokeHandler(handler[i]);
+            }
+        }
+    } else if ((typeof handler === 'undefined' ? 'undefined' : _typeof(handler)) === 'object') {
+        handler.handleEvent.call(handler, event);
     }
-})(function () {
-    var define, module, exports;return function e(t, n, r) {
-        function s(o, u) {
-            if (!n[o]) {
-                if (!t[o]) {
-                    var a = typeof require == "function" && require;if (!u && a) return require(o, !0);if (i) return i(o, !0);var f = new Error("Cannot find module '" + o + "'");throw f.code = "MODULE_NOT_FOUND", f;
-                }var l = n[o] = { exports: {} };t[o][0].call(l.exports, function (e) {
-                    var n = t[o][1][e];return s(n ? n : e);
-                }, l, l.exports, e, t, n, r);
-            }return n[o].exports;
-        }var i = typeof require == "function" && require;for (var o = 0; o < r.length; o++) {
-            s(r[o]);
-        }return s;
-    }({ 1: [function (require, module, exports) {
-            "use strict";
+}
 
-            function invokeHandler(handler, vnode, event) {
-                if (typeof handler === "function") {
-                    // call function handler
-                    handler.call(vnode, event, vnode);
-                } else if (Array.isArray(handler)) {
-                    // call handler with arguments
-                    if (typeof handler[0] === "function") {
-                        // special case for single argument for performance
-                        if (handler.length === 2) {
-                            handler[0].call(handler[1], event, vnode);
-                        } else {
-                            var args = handler.slice(1);
-                            args.push(event);
-                            args.push(vnode);
-                            handler[0].apply(vnode, args);
-                        }
-                    } else {
-                        // call multiple handlers
-                        for (var i = 0; i < handler.length; i++) {
-                            invokeHandler(handler[i]);
-                        }
-                    }
-                } else if ((typeof handler === "undefined" ? "undefined" : _typeof(handler)) === "object") {
-                    handler.handleEvent.call(handler, event);
+function handleEvent(event, vnode) {
+    var name = event.type,
+        on = vnode.data.on;
+    // call event handler(s) if exists
+    if (on && on[name]) {
+        invokeHandler(on[name], vnode, event);
+    }
+}
+
+function createListener() {
+    return function handler(event) {
+        handleEvent(event, handler.vnode);
+    };
+}
+
+function updateEventListeners(oldVnode, vnode) {
+    var oldOn = oldVnode.data.on,
+        oldListener = oldVnode.listener,
+        oldElm = oldVnode.elm,
+        on = vnode && vnode.data.on,
+        elm = vnode && vnode.elm,
+        name;
+    // optimization for reused immutable handlers
+    if (oldOn === on) {
+        if (vnode) {
+            vnode.listener = oldVnode.listener;
+        }
+        return;
+    }
+    // remove existing listeners which no longer used
+    if (oldOn && oldListener) {
+        // if element changed or deleted we remove all existing listeners unconditionally
+        if (!on) {
+            for (name in oldOn) {
+                // remove listener if element was changed or existing listeners removed
+                oldElm.removeEventListener(name, oldListener, false);
+            }
+        } else {
+            for (name in oldOn) {
+                // remove listener if existing listener removed
+                if (!on[name]) {
+                    oldElm.removeEventListener(name, oldListener, false);
                 }
             }
-            function handleEvent(event, vnode) {
-                var name = event.type,
-                    on = vnode.data.on;
-                // call event handler(s) if exists
-                if (on && on[name]) {
-                    invokeHandler(on[name], vnode, event);
+        }
+    }
+    // add new listeners which has not already attached
+    if (on) {
+        // reuse existing listener or create new
+        var listener = vnode.listener = oldVnode.listener || createListener();
+        // update vnode for listener
+        listener.vnode = vnode;
+        // if element changed or added we add all needed listeners unconditionally
+        if (!oldOn) {
+            for (name in on) {
+                // add listener if element was changed or new listeners added
+                elm.addEventListener(name, listener, false);
+            }
+        } else {
+            for (name in on) {
+                // add listener if new listener added
+                if (!oldOn[name]) {
+                    elm.addEventListener(name, listener, false);
                 }
             }
-            function createListener() {
-                return function handler(event) {
-                    handleEvent(event, handler.vnode);
-                };
-            }
-            function updateEventListeners(oldVnode, vnode) {
-                var oldOn = oldVnode.data.on,
-                    oldListener = oldVnode.listener,
-                    oldElm = oldVnode.elm,
-                    on = vnode && vnode.data.on,
-                    elm = vnode && vnode.elm,
-                    name;
-                // optimization for reused immutable handlers
-                if (oldOn === on) {
-                    if (vnode) {
-                        vnode.listener = oldVnode.listener;
-                    }
-                    return;
-                }
-                // remove existing listeners which no longer used
-                if (oldOn && oldListener) {
-                    // if element changed or deleted we remove all existing listeners unconditionally
-                    if (!on) {
-                        for (name in oldOn) {
-                            // remove listener if element was changed or existing listeners removed
-                            oldElm.removeEventListener(name, oldListener, false);
-                        }
-                    } else {
-                        for (name in oldOn) {
-                            // remove listener if existing listener removed
-                            if (!on[name]) {
-                                oldElm.removeEventListener(name, oldListener, false);
-                            }
-                        }
-                    }
-                }
-                // add new listeners which has not already attached
-                if (on) {
-                    // reuse existing listener or create new
-                    var listener = vnode.listener = oldVnode.listener || createListener();
-                    // update vnode for listener
-                    listener.vnode = vnode;
-                    // if element changed or added we add all needed listeners unconditionally
-                    if (!oldOn) {
-                        for (name in on) {
-                            // add listener if element was changed or new listeners added
-                            elm.addEventListener(name, listener, false);
-                        }
-                    } else {
-                        for (name in on) {
-                            // add listener if new listener added
-                            if (!oldOn[name]) {
-                                elm.addEventListener(name, listener, false);
-                            }
-                        }
-                    }
-                }
-            }
-            exports.eventListenersModule = {
-                create: updateEventListeners,
-                update: updateEventListeners,
-                destroy: updateEventListeners
-            };
-            Object.defineProperty(exports, "__esModule", { value: true });
-            exports.default = exports.eventListenersModule;
-        }, {}] }, {}, [1])(1);
-});
+        }
+    }
+}
+
+var eventListeners = {
+    create: updateEventListeners,
+    update: updateEventListeners,
+    destroy: updateEventListeners
+};
+
+exports.default = eventListeners;
 
 /***/ }),
 /* 4 */
@@ -378,7 +349,7 @@ var Observer = function () {
 
                 for (i = 0, length = this.listeners[evt].length; i < length; i += 1) {
                     if (!args) {
-                        var args = [];
+                        args = [];
                     }
                     this.listeners[evt][i].fn.apply(this.listeners[evt][i].ctx, args);
                 }
@@ -388,8 +359,6 @@ var Observer = function () {
 
     return Observer;
 }();
-
-;
 
 exports.default = Observer;
 
@@ -1265,8 +1234,8 @@ var Tung = function (_Observer) {
             callback();
         }
     }, {
-        key: '_childRemoved',
-        value: function _childRemoved() {
+        key: '_childChanged',
+        value: function _childChanged() {
             this.setState(this.state);
         }
     }, {
@@ -1313,7 +1282,7 @@ var Tung = function (_Observer) {
                         var newComponent = new sel();
                         newComponent.setProps(ctx);
                         newComponent.init();
-                        newComponent.on('changed', this._childRemoved, this).on('removed', this._childRemoved, this);
+                        newComponent.on('changed', this._childChanged, this).on('removed', this._childRemoved, this);
                         newComponent.relatedObj = ctx;
                         child = newComponent.stateRender;
 

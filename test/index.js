@@ -115,4 +115,26 @@ describe('Tung', () => {
         });
         assert.equal(inst.refs.Card.length, 5);
     });
+
+    it('components are remove from refs', () => {
+        class Card extends Tung {
+            constructor() {
+                super();
+
+                this.setView(card, btn);
+            }
+            init() {
+                this.setState({});
+            }
+        };
+        inst.setView(page, Card);
+        inst.setState({
+            users: new Array(5).fill(1).map(it => ({ btn: true }))
+        });
+        inst.state.users.pop();
+        inst.state.users.pop();
+        inst.setState(inst.state);
+        console.log(inst.refs.Card)
+        assert.equal(inst.refs.Card.length, 3);
+    });
 });
