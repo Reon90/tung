@@ -1,7 +1,7 @@
 'use strict';
 
-import Observer  from './observer';
-import snabbdom  from 'snabbdom/snabbdom';
+import Observer from './observer';
+import snabbdom from 'snabbdom/snabbdom';
 import snabbdomH from 'snabbdom/h';
 import snabbdomC from 'snabbdom/modules/class';
 import snabbdomP from 'snabbdom/modules/props';
@@ -75,7 +75,7 @@ class Tung extends Observer {
     _process(sel, props, child) {
         let ctx = this;
         let block = props.attrs && props.attrs.block;
-        let tung = Tung.ctx[Tung.ctx.length-1];
+        let tung = Tung.ctx[Tung.ctx.length - 1];
         let isComponent = typeof sel === 'function';
         let childProcessed;
         let childIgnored;
@@ -109,7 +109,7 @@ class Tung extends Observer {
             if (isComponent) {
                 if (block) {
                     Tung.executeArray(child, arr => {
-                        arr.forEach(child => Object.assign(child.data.attrs, props.attrs))
+                        arr.forEach(child => Object.assign(child.data.attrs, props.attrs));
                     });
                 }
             } else {
@@ -143,7 +143,7 @@ class Tung extends Observer {
         callback();
     }
 
-    _childRemoved() {
+    _childChanged() {
         this.setState(this.state);
     }
 
@@ -183,7 +183,7 @@ class Tung extends Observer {
                     newComponent.setProps(ctx);
                     newComponent.init();
                     newComponent
-                        .on('changed', this._childRemoved, this)
+                        .on('changed', this._childChanged, this)
                         .on('removed', this._childRemoved, this);
                     newComponent.relatedObj = ctx;
                     child = newComponent.stateRender;
@@ -221,7 +221,7 @@ class Tung extends Observer {
     }
 
     static processArray(ctx, sel, child) {
-        let tung = Tung.ctx[Tung.ctx.length-1];
+        let tung = Tung.ctx[Tung.ctx.length - 1];
 
         return ctx.map((context, index) => {
             if (typeof context !== 'object') {
@@ -242,7 +242,7 @@ class Tung extends Observer {
     }
 
     static getProps(ctx) {
-        let tung = Tung.ctx[Tung.ctx.length-1];
+        let tung = Tung.ctx[Tung.ctx.length - 1];
         let props = {};
         ['class', 'on', 'style', 'props', 'key'].forEach(it => {
             let key = ctx[it];
@@ -263,4 +263,4 @@ class Tung extends Observer {
 
 Tung.ctx = [];
 
-export {Tung};
+export { Tung };

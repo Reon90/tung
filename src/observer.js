@@ -1,7 +1,6 @@
 'use strict';
 
 class Observer {
-
     constructor() {
         this.listeners = {};
     }
@@ -38,12 +37,12 @@ class Observer {
 
             for (i = 0, length = this.listeners[evt].length; i < length; i += 1) {
                 if (!args) {
-                    var args = [];
+                    args = [];
                 }
                 this.listeners[evt][i].fn.apply(this.listeners[evt][i].ctx, args);
             }
         }
     }
-};
+}
 
 export default Observer;
