@@ -109,7 +109,7 @@ class Tung extends Observer {
             if (isComponent) {
                 if (block) {
                     Tung.executeArray(child, arr => {
-                        arr.forEach(child => Object.assign(child.data.attrs, props.attrs));
+                        arr.forEach(child => Object.assign(child.data.attrs || {}, props.attrs));
                     });
                 }
             } else {
@@ -207,7 +207,7 @@ class Tung extends Observer {
             if (Array.isArray(child[0])) {
                 child = child[0];
             }
-            child = child.filter(node => node !== undefined);
+            child = child.filter(node => node !== undefined && node !== null);
         }
         return child;
     }

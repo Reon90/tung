@@ -1197,7 +1197,7 @@ var Tung = function (_Observer) {
                     if (block) {
                         Tung.executeArray(child, function (arr) {
                             arr.forEach(function (child) {
-                                return Object.assign(child.data.attrs, props.attrs);
+                                return Object.assign(child.data.attrs || {}, props.attrs);
                             });
                         });
                     }
@@ -1310,7 +1310,7 @@ var Tung = function (_Observer) {
                     child = child[0];
                 }
                 child = child.filter(function (node) {
-                    return node !== undefined;
+                    return node !== undefined && node !== null;
                 });
             }
             return child;
